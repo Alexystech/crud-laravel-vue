@@ -5296,13 +5296,18 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     newThought: function newThought() {
-      var thought = {
-        id: 2,
-        description: this.description,
-        created_at: '11/07/2011'
+      var _this = this;
+
+      var params = {
+        description: this.description
       };
-      this.$emit('new', thought);
       this.description = '';
+      axios.post('/thoughts', params).then(function (response) {
+        console.log(response);
+        var thought = response.data;
+
+        _this.$emit('new', thought);
+      });
     }
   }
 });
@@ -5339,15 +5344,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      thoughts: [{
-        'id': 1,
-        'description': 'esta es la descripcion',
-        'created_at': '17/03/2022'
-      }]
+      thoughts: []
     };
   },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    var _this = this;
+
+    axios.get('/thoughts').then(function (response) {
+      _this.thoughts = response.data;
+    });
   },
   methods: {
     addThought: function addThought(thought) {
@@ -5414,14 +5419,27 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     onClickDelete: function onClickDelete() {
-      this.$emit('delete');
+      var _this = this;
+
+      axios["delete"]("/thoughts/".concat(this.thought.id)).then(function () {
+        _this.$emit('delete');
+      });
     },
     onClickEdit: function onClickEdit() {
       this.editMode = true;
     },
     onClickUpdate: function onClickUpdate() {
-      this.editMode = false;
-      this.$emit('update', thought);
+      var _this2 = this;
+
+      var params = {
+        description: this.thought.description
+      };
+      axios.put("/thougts/".concat(this.thought.id), params).then(function (response) {
+        _this2.editMode = false;
+        var thought = response.data;
+
+        _this2.$emit('update', thought);
+      });
     }
   }
 });
@@ -28381,7 +28399,7 @@ var render = function () {
             staticClass: "btn btn-danger",
             on: {
               click: function ($event) {
-                return _vm.onCLickDelete()
+                return _vm.onClickDelete()
               },
             },
           },

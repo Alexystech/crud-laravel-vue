@@ -17,7 +17,7 @@
                     Editar
                 </button>
 
-                <button class="btn btn-danger" v-on:click="onCLickDelete()">
+                <button class="btn btn-danger" v-on:click="onClickDelete()">
                     Eliminar
                 </button>
             </div>
@@ -40,15 +40,24 @@
 
         methods: {
             onClickDelete() {
-                this.$emit('delete');
+                axios.delete(`/thoughts/${this.thought.id}`).then(() => {
+                    this.$emit('delete');
+                });
             },
             onClickEdit() {
-
                 this.editMode = true;
             },
             onClickUpdate() {
-                this.editMode = false;
-                this.$emit('update', thought);
+                const params = {
+                    description: thought.description
+                };
+                axios.put(`/thoughts/${this.thought.id}`, params).then((response) => {
+                    this.editMode = false;
+                    const thought = response.data;
+                    this.$emit('update', thought);
+
+                    return thought;
+                });
             }
         }
     }

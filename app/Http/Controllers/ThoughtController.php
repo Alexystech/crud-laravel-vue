@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Thought;
 
 class ThoughtController extends Controller
 {
@@ -44,7 +45,10 @@ class ThoughtController extends Controller
         //
         $thought = new Thought();
         $thought->description = $request->description;
+        $thought->user_id = auth()->id();
         $thought->save();
+
+        return $thought;
     }
 
     /**
@@ -82,6 +86,8 @@ class ThoughtController extends Controller
         $thought = Thought::find($id);
         $thought->description = $request->description;
         $thought->save();
+
+        return $thought;
     }
 
     /**

@@ -18,16 +18,14 @@
     export default {
         data() {
             return {
-                thoughts: [{
-                    'id': 1,
-                    'description': 'esta es la descripcion',
-                    'created_at': '17/03/2022'
-                }]
+                thoughts: []
             }
         },
 
         mounted() {
-            console.log('Component mounted.')
+            axios.get('/thoughts').then((response) => {
+                this.thoughts = response.data;
+            });
         },
 
         methods: {

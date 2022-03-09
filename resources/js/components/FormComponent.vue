@@ -24,7 +24,7 @@
 <script>
     export default {
         data() {
-            return {
+            return { 
                 description: ''
             }
         },
@@ -34,14 +34,19 @@
 
         methods: {
             newThought() {
-                let thought = {
-                    id: 2,
-                    description: this.description,
-                    created_at: '11/07/2011'
+                const params = {
+                    description: this.description
                 };
 
-                this.$emit('new', thought);
                 this.description = '';
+
+                axios.post('/thoughts', params)
+                    .then((response) => {
+                        console.log(response);
+                        const thought = response.data;
+                        this.$emit('new', thought);
+                    });
+                
             }
         }
     }
